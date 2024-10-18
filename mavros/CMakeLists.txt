@@ -132,6 +132,7 @@ add_library(mavros_plugins SHARED
   # mavros_cog.outl_glob_files('src/plugins')
   # ]]]
   src/plugins/actuator_control.cpp
+  src/plugins/actuator_outputs.cpp
   src/plugins/altitude.cpp
   src/plugins/command.cpp
   src/plugins/dummy.cpp

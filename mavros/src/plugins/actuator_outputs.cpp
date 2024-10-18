@@ -7,10 +7,10 @@
  * https://github.com/mavlink/mavros/tree/master/LICENSE.md
  */
 /**
- * @brief ActuatorControl plugin
- * @file actuator_control.cpp
- * @author Marcel Stüttgen <stuettgen@fh-aachen.de>
- *
+ * @brief ActuatorOutputs plugin
+ * @file actuator_outputs.cpp
+ * @author Jeyong Shin <jeyong@subak.io>
+ * 
  * @addtogroup plugin
  * @{
  */
@@ -42,11 +42,11 @@ public:
   {
     auto sensor_qos = rclcpp::SensorDataQoS();
 
-    target_actuator_control_pub = node->create_publisher<mavros_msgs::msg::ActuatorOutputs>(
+    actuator_outputs_pub = node->create_publisher<mavros_msgs::msg::ActuatorOutputs>(
       "target_actuator_outputs", sensor_qos);
-    actuator_control_sub = node->create_subscription<mavros_msgs::msg::ActuatorOutputs>(
+    actuator_outputs_sub = node->create_subscription<mavros_msgs::msg::ActuatorOutputs>(
       "actuator_outputs", sensor_qos, std::bind(
-        &ActuatorOutputsPlugin::actuator_control_cb, this, _1));
+        &ActuatorOutputsPlugin::actuator_outputs_cb, this, _1));
   }
 
   Subscriptions get_subscriptions() override
@@ -57,8 +57,8 @@ public:
   }
 
 private:
-  rclcpp::Publisher<mavros_msgs::msg::ActuatorControl>::SharedPtr target_actuator_control_pub;
-  rclcpp::Subscription<mavros_msgs::msg::ActuatorControl>::SharedPtr actuator_control_sub;
+  rclcpp::Publisher<mavros_msgs::msg::ActuatorControl>::SharedPtr actuator_outputs_pub;
+  rclcpp::Subscription<mavros_msgs::msg::ActuatorControl>::SharedPtr actuator_outputs_sub;
 
   /* -*- rx handlers -*- */
 
@@ -72,21 +72,19 @@ private:
     ract.group_mix = act.group_mlx;
     ract.controls = act.controls;
 
-    target_actuator_control_pub->publish(ract);
+    actuator_outputs_pub->publish(ract);
   }
 
   /* -*- callbacks -*- */
 
-  void actuator_control_cb(const mavros_msgs::msg::ActuatorControl::SharedPtr req)
+  void actuator_outputs_cb(const mavros_msgs::msg::ActuatorOutputs::SharedPtr req)
   {
     //! about groups, mixing and channels: @p https://pixhawk.org/dev/mixing
-    //! message definiton here: @p https://mavlink.io/en/messages/common.html#SET_ACTUATOR_CONTROL_TARGET
-    mavlink::common::msg::SET_ACTUATOR_CONTROL_TARGET act{};
-
+    //! message definiton here: @p https://mavlink.io/en/messages/common.html#ACTUATOR_OUTPUT_STATUS
+    mavlink::common::msg::ACTUATOR_OUTPUT_STATUS aout{};
     act.time_usec = get_time_usec(req->header.stamp);
-    act.group_mlx = req->group_mix;
     uas->msg_set_target(act);
-    act.controls = req->controls;
+    act.controls = req->outputs;
 
     uas->send_message(act);
   }
