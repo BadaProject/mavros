@@ -59,11 +59,11 @@ private:
 
   void handle_actuator_outputs(
     const mavlink::mavlink_message_t * msg [[maybe_unused]],
-    mavlink::common::msg::ActuatorOutputs & actuator_outputs, plugin::filter::SystemAndOk filter [[maybe_unused]])
+    mavlink::common::msg::ACTUATOR_OUTPUT_STATUS & actuator_outputs, plugin::filter::SystemAndOk filter [[maybe_unused]])
   {
     auto ros_msg = mavros_msgs::msg::ActuatorOutputs();
-    ros_msg.outputs.active = actuator_outputs.active;
-    ros_msg.outputs = actuator_outputs.outputs;
+    ros_msg.active = actuator_outputs.active;
+    ros_msg.actuator = actuator_outputs.actuator;
 
     actuator_outputs_pub->publish(ros_msg);
   }
