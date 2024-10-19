@@ -1,12 +1,18 @@
 import rclpy
 from rclpy.node import Node
-
+import socket
+from plc import PLCPacket  
 from mavros_msgs.msg import ActuatorOutputs
 
 class ActuatorSubscriber(Node):
 
     def __init__(self):
         super().__init__('actuator_subscriber')
+        self.px4_listen_port = 2006
+        self.plc_ip = '192.168.2.77'
+        self.plc_port = 2005
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.plcPacket = PLCPacket()
         self.subscription = self.create_subscription(
             ActuatorOutputs,
             'topic',

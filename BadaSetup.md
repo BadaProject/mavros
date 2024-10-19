@@ -1,4 +1,5 @@
 # 설정
+## onboard 컴퓨터 방화벽 해제
 
 ## serial 경로 설정
 * /dev/myserial 경로로 시리얼 포트 설정 방법
