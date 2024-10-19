@@ -18,6 +18,12 @@ Example and &quot;how to&quot; for users.</description>
 
 Sends actuator controls to FCU controller.</description>
   </class>
+  <class name="actuator_outputs" type="mavros::plugin::PluginFactoryTemplate&lt;mavros::std_plugins::ActuatorOutputsPlugin&gt;" base_class_type="mavros::plugin::PluginFactory">
+    <description>@brief ActuatorOutputs plugin
+@plugin actuator_outputs
+
+Sends actuator controls to FCU controller.</description>
+  </class>
   <class name="altitude" type="mavros::plugin::PluginFactoryTemplate&lt;mavros::std_plugins::AltitudePlugin&gt;" base_class_type="mavros::plugin::PluginFactory">
     <description>@brief Altitude plugin.
 @plugin altitude</description>
