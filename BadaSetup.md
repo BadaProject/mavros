@@ -7,6 +7,11 @@ sudo nano /etc/udev/rules.d/99-my-serial.rules
 ```
 
 * lsusb 명령어로 확인한 vendor id와 product id를 확인
+```
+Bus 001 Device 002: ID 0403:6001 Future Technology Devices International, Ltd FT23   
+
+#0403:6001 에서 0403가 vendor id, 6001이 product id
+```
 
 * 99-my-serial.rules 파일 내부
 ```
