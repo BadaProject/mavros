@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
 import socket
-from plc import PLCPacket  
+from py_plc.plc import PLCPacket  
+
 from mavros_msgs.msg import ActuatorOutputs
 
 class ActuatorSubscriber(Node):
