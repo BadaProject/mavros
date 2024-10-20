@@ -26,9 +26,11 @@ class ActuatorSubscriber(Node):
     def listener_callback(self, msg):
         # 수신하면 메시지를 받아서 plc로 전송
         # socket 생성해서
-        throttle = msg.actuator[3]
-        steering = msg.actuator[1]
-        self.sock.sendto(self.plcPacket.makeWritePacket2(throttle, steering), (self.plc_ip, self.plc_port))
+        socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        throttle = int(msg.actuator[3])
+        steering = int(msg.actuator[1])
+        socket.sendto(self.plcPacket.makeWritePacket(), (self.plc_ip, self.plc_port))
         print("sending: ", throttle, steering)
 
 def main(args=None):
