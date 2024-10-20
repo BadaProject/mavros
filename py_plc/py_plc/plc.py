@@ -243,6 +243,19 @@ class PLCPacket:
 		sum = sum & 0x00FF
 		return sum
 
+	def makeWritePacket2(self, throttle, steering):
+		px4ToplcPacket = Px4ToPlcPacket()
+		px4ToplcPacket.engine_thrust = throttle
+		px4ToplcPacket.clutch = 2
+		px4ToplcPacket.steering_angle = steering
+		px4ToplcPacket.trim_angle = 4
+		px4ToplcPacket.engine_ignition = 5
+		px4ToplcPacket.bow_thruster_power = 6
+		px4ToplcPacket.bow_thruster_rev = 7
+		return struct.pack('40B15h', *self.write_header_buffer, 
+						   px4ToplcPacket.emtpy1, px4ToplcPacket.empty2, px4ToplcPacket.engine_thrust, px4ToplcPacket.clutch, px4ToplcPacket.steering_angle, px4ToplcPacket.trim_angle, px4ToplcPacket.empty3, px4ToplcPacket.engine_ignition, px4ToplcPacket.bow_thruster_power, px4ToplcPacket.bow_thruster_rev, px4ToplcPacket.reserved1, px4ToplcPacket.reserved2, px4ToplcPacket.reserved3, px4ToplcPacket.reserved4, px4ToplcPacket.reserved5)
+
+
 	def makeWritePacket(self):
 		px4ToplcPacket = Px4ToPlcPacket()
 		px4ToplcPacket.engine_thrust = 1

@@ -18,7 +18,7 @@ class ActuatorSubscriber(Node):
         self.plcPacket = PLCPacket()
         self.subscription = self.create_subscription(
             ActuatorOutputs,
-            'topic',
+            'actuatoroutput',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
@@ -29,8 +29,8 @@ class ActuatorSubscriber(Node):
         throttle = msg.actuator[3]
         steering = msg.actuator[1]
         self.sock.sendto(self.plcPacket.makeWritePacket2(throttle, steering), (self.plc_ip, self.plc_port))
-        
-        
+        print("sending: ", throttle, steering)
+
 def main(args=None):
     rclpy.init(args=args)
 
