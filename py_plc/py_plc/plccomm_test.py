@@ -20,6 +20,7 @@ class ActuatorPublisher(Node):
         msg.actuator[3] = 1000.0
         # msg.actuator = [1000.0] * 32
         self.publisher_.publish(msg)
+        print("Publishing: ", msg.actuator[1], msg.actuator[3])
 
 
 def main(args=None):
