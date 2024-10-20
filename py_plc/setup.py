@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'plc_comm = py_plc.plccomm:main',
+            'plc_comm_test = py_plc.plccomm_test:main',
         ],
     },
 )
