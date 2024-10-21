@@ -22,11 +22,13 @@ Bus 001 Device 002: ID 0403:6001 Future Technology Devices International, Ltd FT
 
 * 99-my-serial.rules 파일 내부
 ```
-SUBSYSTEM=="tty", ATTR{idVendor}=="YOUR_VENDOR_ID", ATTR{idProduct}=="YOUR_PRODUCT_ID", SYMLINK+="myserial"
+KERNEL=="ttyUSB[0-9]*", ACTION=="add", ATTRS{idVendor}=="067b", ATTR{idProduct}=="2303", MODE="0666", GROUP="dialout", SYMLINK+="telemetry"
 ```
 
 * udev 데몬 재시작하여 적용
 ```bash
+sudo cp ./99-bada.rules /etc/udev/rules.d/
+
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```

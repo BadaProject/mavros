@@ -61,9 +61,14 @@ private:
     const mavlink::mavlink_message_t * msg [[maybe_unused]],
     mavlink::common::msg::ACTUATOR_OUTPUT_STATUS & actuator_outputs, plugin::filter::SystemAndOk filter [[maybe_unused]])
   {
+    RCLCPP_INFO(get_logger(), "ActuatorOutputsPlugin::handle_actuator_outputs");
     auto ros_msg = mavros_msgs::msg::ActuatorOutputs();
     ros_msg.active = actuator_outputs.active;
-    ros_msg.actuator = actuator_outputs.actuator;
+    for(int i = 0; i < 32; i++)
+    {
+      ros_msg.actuator[i] = actuator_outputs.actuator[i];
+    }
+    // ros_msg.actuator = actuator_outputs.actuator;
 
     actuator_outputs_pub->publish(ros_msg);
   }

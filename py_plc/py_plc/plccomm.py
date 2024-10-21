@@ -18,7 +18,7 @@ class ActuatorSubscriber(Node):
         self.plcPacket = PLCPacket()
         self.subscription = self.create_subscription(
             ActuatorOutputs,
-            'actuatoroutput',
+            'mavros/actuator_outputs',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
