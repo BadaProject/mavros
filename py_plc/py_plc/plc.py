@@ -54,12 +54,12 @@ def getCheckSum(data, start, length):
 class PlcToPx4Packet:
 	def __init__(self):
 		self.auto_control_status = 0
-		self.empty1 = 0
+		self.emergency_stop_status = 0
 		self.engine_rpm_status = 0
 		self.clutch_status = 0
 		self.steering_angle_status = 0
-		self.trim_angle_command = 0
-		self.empty2 = 0
+		self.trim_angle_status = 0
+		self.empty1 = 0
 		self.engine_running_status = 0
 		self.bow_thruster_power_status = 0
 		self.bow_thruster_rev_status = 0
@@ -74,12 +74,12 @@ class PlcToPx4Packet:
 
 	def parseData(self, data):
 		self.auto_control_status = data[0]
-		self.empty1 = data[1]
+		self.emergency_stop_status = data[1]
 		self.engine_rpm_status = data[2]
 		self.clutch_status = data[3]
 		self.steering_angle_status = data[4]
-		self.trim_angle_command = data[5]
-		self.empty2 = data[6]
+		self.trim_angle_status = data[5]
+		self.empty1 = data[6]
 		self.engine_running_status = data[7]
 		self.bow_thruster_power_status = data[8]
 		self.bow_thruster_rev_status = data[9]
@@ -90,12 +90,12 @@ class PlcToPx4Packet:
 		self.reserved5 = data[14]
 	def printData(self):
 		print('auto control status: ', self.auto_control_status)
-		print('empty1: ', self.empty1)
+		print('emergency stop status: ', self.emergency_stop_status)
 		print('engine rpm status: ', self.engine_rpm_status)
 		print('clutch status: ', self.clutch_status)
 		print('steering angle status: ', self.steering_angle_status)
-		print('trim angle command: ', self.trim_angle_command)
-		print('empty2: ', self.empty2)
+		print('trim angle status: ', self.trim_angle_status)
+		print('empty1: ', self.empty1)
 		print('engine running status: ', self.engine_running_status)
 		print('bow thruster power status: ', self.bow_thruster_power_status)
 		print('bow thruster rev status: ', self.bow_thruster_rev_status)
@@ -190,24 +190,26 @@ class PLCPacket:
 		]
 		self.write_header_buffer[19] = getCheckSum(self.write_header_buffer, 0, 19)
         # self.read_header_buffer = [0x4C, 0x53, 0x49, 0x53, 0x2D, 0x58, 0x47, 0x54, 0x00, 0x00, 0x00, 0x00, 0xA0, 0x33, 0x00, 0x00, 0x14, 0x00, 0x00]
+
 		self.read_header_buffer = [0x4C, 0x53, 0x49, 0x53, 0x2D, 0x58, 0x47, 0x54,
 		0x00, 0x00, # Reserved[2]
 		0x00, 0x00, # PLC Info[2]
-		0xA0, # CPU Info[1]
+		0x00, # CPU Info[1]
 		0x33, # Source of Frame[1]
 		0x00, 0x00, # Invoke ID[2]
-		0x14, 0x00, # Length[2] REQUEST_READ부터 마지막까지의 길이
+		0x12, 0x00, # Length[2]
 		0x00, # Bit0~3 : slot # of FEnet I/F module, Bit4~7 : base # of FEnet I/F module
-		0xFF, #getCheckSum(self.read_header_buffer, 0, len(self.read_header_buffer)), # 0xFF, checksum ToDo
+		0x00, #getCheckSum(self.read_header_buffer, 0, len(self.read_header_buffer)), # 0xFF, checksum ToDo
 		REQUEST_READ, 0x00, # Request[2]
 		0x14, 0x00, # Data Type[2]
 		0x00, 0x00, # Reserved[2]
 		0x01, 0x00, # block length[2]
-		0x08, 0x00, # block name length[2] %DB00802
-		0x25, 0x44, 0x42, 0x30, 0x30, 0x38, 0x30, 0x32, #  %D00401을 읽으려면 %DB00802 를 사용해야 한다.
-		0x1E, 0x00 # PLC -> PX4 data size : 30을 16진수로 표현하면 1E이다. (byte의 개수)
+		0x06, 0x00, # block name length[2] 34 30 30 0600  
+		0x25, 0x44, 0x42, 0x38, 0x30,  0x30, #  D00401을 읽으려면 %DB00802 를 사용해야 한다.
+		0x1E, 0x00 # PLC -> PX4 data size : 30을 16진수로 표현하면 1E이다.
 		]
-		self.read_header_buffer[19] = getCheckSum(self.read_header_buffer, 0, 19)
+
+		# self.read_header_buffer[19] = getCheckSum(self.read_header_buffer, 0, 19)
 
 		self.read_response_header_buffer = [0x4C, 0x53, 0x49, 0x53, 0x2D, 0x58, 0x47, 0x54,
 		0x00, 0x00, # Reserved[2]
