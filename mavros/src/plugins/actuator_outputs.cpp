@@ -63,11 +63,11 @@ private:
   {
     RCLCPP_INFO(get_logger(), "ActuatorOutputsPlugin::handle_actuator_outputs");
     auto ros_msg = mavros_msgs::msg::ActuatorOutputs();
-    // ros_msg.active = actuator_outputs.active;
-    // for(int i = 0; i < 32; i++)
-    // {
-    //   ros_msg.actuator[i] = actuator_outputs.actuator[i];
-    // }
+    ros_msg.active = actuator_outputs.active;
+    for(int i = 0; i < 32; i++)
+    {
+      ros_msg.actuator[i] = actuator_outputs.actuator[i];
+    }
     // ros_msg.actuator = actuator_outputs.actuator;
 
     actuator_outputs_pub->publish(ros_msg);
