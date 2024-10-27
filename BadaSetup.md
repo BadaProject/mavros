@@ -67,3 +67,7 @@ sudo systemctl enable mylaunch.service
 sudo systemctl start mylaunch.service
 ```
 
+## .bashrc
+'''bash
+source ~/bada2_ws/install/setup.bash
+'''
