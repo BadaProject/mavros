@@ -271,7 +271,8 @@ class PLCPacket:
 						   px4ToplcPacket.emtpy1, px4ToplcPacket.empty2, px4ToplcPacket.engine_thrust, px4ToplcPacket.clutch, px4ToplcPacket.steering_angle, px4ToplcPacket.trim_angle, px4ToplcPacket.empty3, px4ToplcPacket.engine_ignition, px4ToplcPacket.bow_thruster_power, px4ToplcPacket.bow_thruster_rev, px4ToplcPacket.reserved1, px4ToplcPacket.reserved2, px4ToplcPacket.reserved3, px4ToplcPacket.reserved4, px4ToplcPacket.reserved5)
 	
 	def makeReadPacket(self):
-		return struct.pack('40B', *self.read_header_buffer)
+		# return struct.pack('40B', *self.read_header_buffer)
+		return struct.pack(str(len(self.read_header_buffer))+'B', *self.read_header_buffer)
 
 	def makeReadRespondPacket(self):
 		plcTopx4Packet = PlcToPx4Packet()
