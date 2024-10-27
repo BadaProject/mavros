@@ -84,6 +84,7 @@ set(msg_files
   msg/ParamEvent.msg
   msg/ParamValue.msg
   msg/PlayTuneV2.msg
+  msg/PlcStatus.msg
   msg/PositionTarget.msg
   msg/RCIn.msg
   msg/RCOut.msg

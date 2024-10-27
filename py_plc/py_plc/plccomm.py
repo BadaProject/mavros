@@ -6,6 +6,7 @@ import socket
 from py_plc.plc import PLCPacket  
 
 from mavros_msgs.msg import ActuatorOutputs
+from mavros_msgs.msg import PlcStatus
 
 class ActuatorSubscriber(Node):
 
@@ -40,13 +41,15 @@ class ActuatorSubscriber(Node):
     # 0.5초마다 plc에게 'hello' 메시지를 보내는 send_read_request 메소드를 생성
     def send_read_request(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind((self.px4_ip, self.px4_listen_port))
         sock.sendto(self.plcPacket.makeReadPacket(), (self.plc_ip, self.plc_port))
         print("sending read request")
         
     def handle_read_response(self, sock):
         # plc로부터 응답을 받아서 처리하는 메소드
         # plc로부터 받은 데이터를 출력
-
+        plc_publish = self.create_publisher(PlcStatus, 'plc_status', 10)
+        
         px4_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         px4_socket.bind(('', self.px4_listen_port))
         while True:
@@ -59,7 +62,18 @@ class ActuatorSubscriber(Node):
                     plc_packet.printData()
                     # 32번째 index부터 30bytes 데이터를 short int 15개에 담는다.
                     # publish 
-            print(data)
+                    plc_status = PlcStatus()
+                    plc_status.auto_control_status = plc_packet.auto_control_status
+                    plc_status.emergency_stop_status = plc_packet.emergency_stop_status
+                    plc_status.engine_rpm_status = plc_packet.engine_rpm_status
+                    plc_status.clutch_status = plc_packet.clutch_status
+                    plc_status.steering_angle_status = plc_packet.steering_angle_status
+                    plc_status.trim_angle_status = plc_packet.trim_angle_status
+                    plc_status.engine_running_status = plc_packet.engine_running_status
+                    plc_status.bow_thruster_power_status = plc_packet.bow_thruster_power_status
+                    plc_status.bow_thruster_rev_status = plc_packet.bow_thruster_rev_status
+                    plc_publish.publish(plc_status)
+            # print(data)
             print(f"Received data: {data} from {addr} length : {len(data)}")
 
         # data에서 read-request에 대한 응답인지 확인
