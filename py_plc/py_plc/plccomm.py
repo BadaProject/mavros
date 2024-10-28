@@ -99,13 +99,13 @@ class ActuatorSubscriber(Node):
 
     def cal_steering(self, pwm):
         if pwm <= 1550 and pwm >= 1450:
-            return 0
+            return 300
         elif pwm > 1550:
-            return (pwm - 1550) * 0.66
+            return (pwm - 1550) * 0.66 + 300
         elif pwm < 1450:
-            return (pwm - 1450) * 0.66
+            return (pwm - 1000) * 0.66
         else:
-            return 0
+            return 300
 
     # 2000일때 100
     # 1500일때 0
@@ -116,12 +116,12 @@ class ActuatorSubscriber(Node):
         if pwm <= 1550 : 
             return 0 
         elif pwm > 1550:
-            return (pwm-1550) * 0.22 
+            return (pwm-1550) * 0.26 
         else:
             return 0
 
     def cal_clutch(self, throttle):
-        if throttle < 3:
+        if throttle < 6:
             return 0
         else:
             return 1
