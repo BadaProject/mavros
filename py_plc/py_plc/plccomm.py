@@ -13,21 +13,29 @@ class ActuatorSubscriber(Node):
     def __init__(self):
         super().__init__('actuator_subscriber')
         self.px4_listen_port = 2006
-        self.plc_ip = '127.0.0.1' #self.plc_ip = '192.168.2.88'
+        self.plc_ip = '192.168.2.88' # self.plc_ip = '127.0.0.1'
         self.plc_port = 2005
         self.px4_ip = '127.0.0.1' # self.px4_ip = '192.168.2.200'
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         # self.sock.bind((self.px4_ip, self.px4_listen_port))
         self.plcPacket = PLCPacket()
+         
+        qos2 = rclpy.qos.QoSProfile(
+            depth=10,
+            reliability=rclpy.qos.QoSReliabilityPolicy.BEST_EFFORT
+        )
+
         self.subscription = self.create_subscription(
             ActuatorOutputs,
             'mavros/actuator_outputs',
             self.listener_callback,
-            10)
+            # 10,
+            qos_profile=qos2
+            )
         # thread로 0.5초마다 send_read_request 메소드를 실행
-        self.create_timer(0.5, self.send_read_request)
+        # self.create_timer(0.5, self.send_read_request)
         # thread로 handle_read_response 메소드를 실행
-        thread = threading.Thread(target=self.handle_read_response, args=(self.sock,))
+        # thread = threading.Thread(target=self.handle_read_response, args=(self.sock,))
     def listener_callback(self, msg):
         # 수신하면 메시지를 받아서 plc로 전송
         # socket 생성해서
@@ -35,7 +43,7 @@ class ActuatorSubscriber(Node):
 
         throttle = int(msg.actuator[3])
         steering = int(msg.actuator[1])
-        sock.sendto(self.plcPacket.makeWritePacket(), (self.plc_ip, self.plc_port))
+        sock.sendto(self.plcPacket.makeWritePacket2(throttle, steering), (self.plc_ip, self.plc_port))
         print("sending: ", throttle, steering)
 
     # 0.5초마다 plc에게 'hello' 메시지를 보내는 send_read_request 메소드를 생성
