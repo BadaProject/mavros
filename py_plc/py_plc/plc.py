@@ -245,10 +245,10 @@ class PLCPacket:
 		sum = sum & 0x00FF
 		return sum
 
-	def makeWritePacket2(self, throttle, steering):
+	def makeWritePacket2(self, throttle, steering, clutch):
 		px4ToplcPacket = Px4ToPlcPacket()
 		px4ToplcPacket.engine_thrust = throttle
-		px4ToplcPacket.clutch = 2
+		px4ToplcPacket.clutch = clutch
 		px4ToplcPacket.steering_angle = steering
 		px4ToplcPacket.trim_angle = 4
 		px4ToplcPacket.engine_ignition = 5

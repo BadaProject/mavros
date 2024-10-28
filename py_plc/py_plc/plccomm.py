@@ -41,10 +41,12 @@ class ActuatorSubscriber(Node):
         # socket 생성해서
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        throttle = int(msg.actuator[3])
-        steering = int(msg.actuator[1])
-        sock.sendto(self.plcPacket.makeWritePacket2(throttle, steering), (self.plc_ip, self.plc_port))
-        print("sending: ", throttle, steering)
+        throttle = self.cal_throttle(int(msg.actuator[3]))# throttle = int(msg.actuator[3])
+        steering = self.cal_steering(int(msg.actuator[1]))# steering = int(msg.actuator[1])
+        clutch = self.cal_clutch(throttle)
+
+        sock.sendto(self.plcPacket.makeWritePacket2(int(throttle), int(steering), int(clutch)), (self.plc_ip, self.plc_port))
+        print("sending: ", throttle, steering, clutch)
 
     # 0.5초마다 plc에게 'hello' 메시지를 보내는 send_read_request 메소드를 생성
     def send_read_request(self):
@@ -88,6 +90,41 @@ class ActuatorSubscriber(Node):
         # data를 parsing해서 publish
         
         print(data)
+
+    # 1500 일때 0
+    # 2000 일때 300
+    # 1000 일때 -300
+    # 1750 일때 150
+    # 1250 일때 -150
+
+    def cal_steering(self, pwm):
+        if pwm <= 1550 and pwm >= 1450:
+            return 0
+        elif pwm > 1550:
+            return (pwm - 1550) * 0.66
+        elif pwm < 1450:
+            return (pwm - 1450) * 0.66
+        else:
+            return 0
+
+    # 2000일때 100
+    # 1500일때 0
+    # 1000 일때 0
+    # 1750일때 50
+
+    def cal_throttle(self, pwm):
+        if pwm <= 1550 : 
+            return 0 
+        elif pwm > 1550:
+            return (pwm-1550) * 0.22 
+        else:
+            return 0
+
+    def cal_clutch(self, throttle):
+        if throttle < 3:
+            return 0
+        else:
+            return 1
 
 def main(args=None):
     rclpy.init(args=args)
