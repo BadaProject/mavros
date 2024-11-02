@@ -121,7 +121,7 @@ class ActuatorSubscriber(Node):
             return 0
 
     def cal_clutch(self, throttle):
-        if throttle < 6:
+        if throttle < 3:
             return 0
         else:
             return 1
