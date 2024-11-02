@@ -42,10 +42,10 @@ ls -l /dev/myserial
 ## 시작프로그램 설정
 1. service 파일 생성
 ```bash
-sudo nano /etc/systemd/system/mylaunch.service
+sudo nano /etc/systemd/system/bada.service
 ```
 
-2. mylaunch.service 파일 내부
+1. bada.service 파일 내부
 ```
 [Unit]
 Description=Starts my ROS2 launch file
@@ -54,7 +54,7 @@ After=network.target
 [Service]
 Type=simple
 User=your_username  # 실행할 유저 이름
-WorkingDirectory=/home/your_username/ros2_ws/src/mypackage/launch/
+WorkingDirectory=/home/bada/
 ExecStart=/usr/bin/python3 mylaunch.py
 
 [Install]
@@ -63,8 +63,8 @@ WantedBy=multi-user.target
 * service 활성화 및 시작
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable mylaunch.service
-sudo systemctl start mylaunch.service
+sudo systemctl enable bada.service
+sudo systemctl start bada.service
 ```
 
 ## .bashrc
