@@ -8,6 +8,11 @@
    * telemetry serial 
 
 ## serial 경로 설정
+* serial group
+```bash
+sudo usermod -aG dialout bada
+```
+
 * /dev/myserial 경로로 시리얼 포트 설정 방법
 ```bash
 sudo nano /etc/udev/rules.d/99-my-serial.rules
@@ -65,9 +70,12 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 sudo systemctl enable bada.service
 sudo systemctl start bada.service
+
+systemctl status bada.service
 ```
 
 ## .bashrc
 '''bash
-source ~/bada2_ws/install/setup.bash
+source /opt/ros/humble/setup.bash
+source /home/jeyong/bada2_ws/install/setup.bash
 '''

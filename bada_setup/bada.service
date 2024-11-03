@@ -1,0 +1,12 @@
+[Unit]
+Description=Starts my ROS2 launch file
+After=network.target
+
+[Service]
+Type=simple
+User=jeyong  #bada
+ExecStart=/home/jeyong/bada.sh  #/home/bada/bada.sh
+
+[Install]
+WantedBy=multi-user.target
+
